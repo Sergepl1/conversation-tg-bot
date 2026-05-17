@@ -13,20 +13,9 @@ import { TelegrafExceptionFilter } from './telegram/telegraf-exception.filter';
     }),
     TelegrafModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
-        const token = configService.get<string>('TELEGRAM_BOT_TOKEN');
-        const domain = configService.get<string>('WEBHOOK_DOMAIN');
-        
-        return {
-          token,
-          launchOptions: domain && domain !== 'localhost' ? {
-            webhook: {
-              domain,
-              hookPath: `/telegraf/${token}`,
-            },
-          } : undefined,
-        };
-      },
+      useFactory: (configService: ConfigService) => ({
+        token: configService.get<string>('TELEGRAM_BOT_TOKEN'),
+      }),
       inject: [ConfigService],
     }),
     GeminiModule,
